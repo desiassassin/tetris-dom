@@ -64,7 +64,7 @@ class Shape {
 
                     // set the previous position's as empty and mark the right cells as filled
                     GRID[x][y] = 0;
-                    GRID[x][y + 1] = FILL.FILLED;
+                    GRID[x][y + 1] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
                     this.shape[i][j].y = this.shape[i][j].y + 1;
                }
           }
@@ -82,7 +82,7 @@ class Shape {
 
                     // set the previous position's as empty and mark the right cells as filled
                     GRID[x][y] = 0;
-                    GRID[x][y - 1] = FILL.FILLED;
+                    GRID[x][y - 1] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
                     this.shape[i][j].y = this.shape[i][j].y - 1;
                }
           }
