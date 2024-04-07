@@ -1,12 +1,9 @@
 const GAME_ROOT = document.getElementById("game-root");
-const TICK_RATE = 10;
+const TICKS_PER_SECOND = 4;
 let GRID = [];
 let SHAPE = null;
-const SHAPE_TYPES = [Shape_O, Shape_I, Shape_L, Shape_T, Shape_Z];
-const FILL = {
-     EMPTY: 0,
-     FILLED: 1
-};
+const SHAPE_TYPES = [Shape_O]; //, Shape_I, Shape_L, Shape_T, Shape_Z];
+const FILL = { EMPTY: false, FILLED: true };
 const ROWS = 20;
 const COLS = 10;
 
@@ -15,15 +12,11 @@ const UPDATE_EVENT = new Event("update");
 
 (function createGrid(rows, cols) {
      // create grid
-     for (let i = 0; i < rows; i++) {
-          const row = [];
-          for (let j = 0; j < cols; j++) row.push(FILL.EMPTY);
-          GRID.push(row);
-     }
+     GRID = new Array(rows).fill().map(() => new Array(cols).fill().map(() => new Block()));
 
      // add the first shape to the grid
      addNewShape();
-     // create the initial dom node
+     // create the initial dom node to show playing area before the game loop kicks in
      recreateDOMNodes();
 })(ROWS, COLS);
 
@@ -31,7 +24,7 @@ setInterval(() => {
      removeDOMNodes();
      recreateDOMNodes();
      updateShapes();
-}, 500);
+}, 1000 / TICKS_PER_SECOND);
 
 window.addEventListener("keydown", function (event) {
      if (event.code === "Space") {
@@ -50,6 +43,7 @@ window.addEventListener("update", (event) => {
 
 function updateShapes() {
      if (SHAPE?.moveDown?.(GRID)) {
+          if (checkGameOver()) return window.location.reload();
           removeFullRows();
           addNewShape();
      }
@@ -73,9 +67,12 @@ function recreateDOMNodes() {
                const cell = document.createElement("div");
                cell.classList.add("cell");
                cell.id = `${i}-${j}`;
-               row.appendChild(cell);
 
-               if (GRID[i][j] == FILL.FILLED) cell.classList.add("filled");
+               if (GRID[i][j].filled === FILL.FILLED) {
+                    cell.classList.add("filled");
+                    cell.style.backgroundColor = GRID[i][j].color;
+               }
+               row.appendChild(cell);
           }
           GAME_ROOT.appendChild(row);
      }
@@ -86,14 +83,18 @@ function removeFullRows() {
      let count = 0;
 
      for (let i = GRID.length - 1; i >= 0; i--) {
-          if (GRID[i].every((cell) => cell == 1)) {
-               GRID[i] = GRID[i].map(() => FILL.EMPTY);
+          if (GRID[i].every((cell) => cell.filled === FILL.FILLED)) {
+               GRID[i] = GRID[i].map((cell) => ({ ...cell, filled: FILL.EMPTY }));
                count++;
           } else NEW_GRID.unshift([...GRID[i]]);
      }
 
      // normalize new grid
-     for (let i = 0; i < count; i++) NEW_GRID.unshift(new Array(COLS).fill(0));
+     for (let i = 0; i < count; i++) NEW_GRID.unshift(new Array(COLS).fill().map(() => new Block()));
 
      GRID = NEW_GRID;
+}
+
+function checkGameOver() {
+     return GRID[0].some((cell) => cell.filled === FILL.FILLED);
 }

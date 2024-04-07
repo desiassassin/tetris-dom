@@ -47,11 +47,5 @@ html {
 }
 
 .cell.filled {
-     background-color: green;
-     border: 3px inset rgba(0, 0, 0, 0.75);
-}
-
-.cell.temp {
-     background-color: red;
      border: 3px inset rgba(0, 0, 0, 0.75);
 }

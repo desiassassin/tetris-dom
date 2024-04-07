@@ -1,13 +1,16 @@
+const COLORS = ["#de2d24ff", "#266ac3ff", "#f82173ff", "#33c03fff", "#cfc424ff"];
+
 class Shape {
      constructor(shapeStructure) {
           this.shape = shapeStructure;
+          this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
      }
 
      addToGrid(GRID) {
-          console.log(this.shape);
           for (let i = 0; i < this.shape.length; i++) {
                for (let j = 0; j < this.shape[i].length; j++) {
-                    GRID[i][j] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[i][j].filled = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[i][j].color = this.color;
 
                     this.shape[i][j].x = i;
                     this.shape[i][j].y = j;
@@ -31,20 +34,20 @@ class Shape {
 
                     // above a block check
                     // cell is empty
-                    if (this.shape[i][j].empty && GRID[x + 1][y] === FILL.FILLED) {
+                    if (this.shape[i][j].empty && GRID[x + 1][y].filled === FILL.FILLED) {
                          reachedBottom = true;
                          continue;
                     }
 
                     // cell is filled
-                    if (!this.shape[i][j].empty && GRID[x + 1][y] === FILL.FILLED) {
-                         console.log("reached bottom");
-                         return true;
-                    }
+                    if (!this.shape[i][j].empty && GRID[x + 1][y].filled === FILL.FILLED) return true;
 
                     // set the previous position's as empty and mark the lower cells as filled
-                    GRID[x][y] = FILL.EMPTY;
-                    GRID[x + 1][y] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[x][y].filled = FILL.EMPTY;
+                    // set fill and color
+                    GRID[x + 1][y].filled = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[x + 1][y].color = this.color;
+
                     this.shape[i][j].x = this.shape[i][j].x + 1;
                }
           }
@@ -60,11 +63,12 @@ class Shape {
                     const y = this.shape[i][j].y;
 
                     // right side wall check
-                    if (GRID[x][y + 1] === undefined || GRID[x][y + 1] === 1) return;
+                    if (GRID[x][y + 1] === undefined || GRID[x][y + 1].filled === FILL.FILLED) return;
 
                     // set the previous position's as empty and mark the right cells as filled
-                    GRID[x][y] = 0;
-                    GRID[x][y + 1] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[x][y].filled = 0;
+                    GRID[x][y + 1].filled = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[x][y + 1].color = this.color;
                     this.shape[i][j].y = this.shape[i][j].y + 1;
                }
           }
@@ -78,11 +82,12 @@ class Shape {
                     const y = this.shape[i][j].y;
 
                     // right side wall check
-                    if (GRID[x][y - 1] === undefined || GRID[x][y - 1] === 1) return;
+                    if (GRID[x][y - 1] === undefined || GRID[x][y - 1].filled === FILL.FILLED) return;
 
                     // set the previous position's as empty and mark the right cells as filled
-                    GRID[x][y] = 0;
-                    GRID[x][y - 1] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[x][y].filled = 0;
+                    GRID[x][y - 1].filled = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+                    GRID[x][y - 1].color = this.color;
                     this.shape[i][j].y = this.shape[i][j].y - 1;
                }
           }
