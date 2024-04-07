@@ -2,10 +2,12 @@ const GAME_ROOT = document.getElementById("game-root");
 const TICKS_PER_SECOND = 4;
 let GRID = [];
 let SHAPE = null;
-const SHAPE_TYPES = [Shape_O]; //, Shape_I, Shape_L, Shape_T, Shape_Z];
+const SHAPE_TYPES = [Shape_O, Shape_I, Shape_L, Shape_T, Shape_Z];
 const FILL = { EMPTY: false, FILLED: true };
 const ROWS = 20;
 const COLS = 10;
+let PAUSED = true;
+let GAME_LOOP_REF = null;
 
 // set a new event on window
 const UPDATE_EVENT = new Event("update");
@@ -22,18 +24,29 @@ function createGrid(rows, cols) {
 
 createGrid(ROWS, COLS);
 
-setInterval(() => {
-     removeDOMNodes();
-     recreateDOMNodes();
-     updateShapes();
-}, 1000 / TICKS_PER_SECOND);
+function startGame() {
+     PAUSED = false;
+     // start the game loop
+     GAME_LOOP_REF = setInterval(() => {
+          removeDOMNodes();
+          recreateDOMNodes();
+          updateShapes();
+     }, 1000 / TICKS_PER_SECOND);
+}
+
+function pauseGame() {
+     PAUSED = true;
+     clearInterval(GAME_LOOP_REF);
+}
 
 window.addEventListener("keydown", function (event) {
      if (event.code === "Space") {
-          // todo add rotation
+          if (PAUSED) startGame();
+          else pauseGame();
      } else if (event.code === "ArrowRight") SHAPE?.moveRight?.(GRID);
      else if (event.code === "ArrowLeft") SHAPE?.moveLeft?.(GRID);
-     else if (event.code === "ArrowDown") SHAPE?.moveDown?.(GRID);
+     else if (event.code === "ArrowDown") updateShapes();
+     // else if (event.code === "ArrowUp") SHAPE?.rotate(GRID);
 
      window.dispatchEvent(UPDATE_EVENT);
 });
@@ -46,7 +59,6 @@ window.addEventListener("update", (event) => {
 function updateShapes() {
      if (SHAPE?.moveDown?.(GRID)) {
           if (checkGameOver()) return restartGame();
-          // if (checkGameOver()) return window.location.reload();
           removeFullRows();
           addNewShape();
      }
