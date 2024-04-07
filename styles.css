@@ -1,0 +1,57 @@
+:root {
+     --cell-size: 30px;
+     --rows-count: 10;
+     --cols-count: 20;
+     --gap: 0px;
+}
+
+*,
+*::before,
+*::after {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+}
+
+html {
+     min-height: 100vh;
+     background-color: #111111;
+}
+
+#main {
+     width: 100%;
+     min-height: 100vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+
+#game-root {
+     height: calc(var(--rows-count) * var(--cell-size) * 1px);
+     width: calc(var(--cols-count) * var(--cell-size) * 1px);
+     display: flex;
+     flex-direction: column;
+     gap: var(--gap);
+     outline: 2px solid red;
+}
+
+.row {
+     display: flex;
+     width: calc(var(--cols-count) * var(--cell-size) * 1px);
+     gap: var(--gap);
+}
+
+.cell {
+     aspect-ratio: 1 / 1;
+     width: var(--cell-size);
+}
+
+.cell.filled {
+     background-color: green;
+     border: 3px inset rgba(0, 0, 0, 0.75);
+}
+
+.cell.temp {
+     background-color: red;
+     border: 3px inset rgba(0, 0, 0, 0.75);
+}
