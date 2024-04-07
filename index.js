@@ -2,7 +2,7 @@ const GAME_ROOT = document.getElementById("game-root");
 const TICK_RATE = 10;
 let GRID = [];
 let SHAPE = null;
-const SHAPE_TYPES = ["O", "I", "L", "T", "Z"];
+const SHAPE_TYPES = [Shape_O, Shape_I, Shape_L, Shape_T, Shape_Z];
 const FILL = {
      EMPTY: 0,
      FILLED: 1
@@ -30,7 +30,7 @@ const UPDATE_EVENT = new Event("update");
 setInterval(() => {
      removeDOMNodes();
      recreateDOMNodes();
-     // updateShapes();
+     updateShapes();
 }, 500);
 
 window.addEventListener("keydown", function (event) {
@@ -56,7 +56,7 @@ function updateShapes() {
 }
 
 function addNewShape() {
-     SHAPE = new Shape_T();
+     SHAPE = new SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)]();
      SHAPE.addToGrid(GRID);
 }
 

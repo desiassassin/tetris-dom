@@ -16,6 +16,8 @@ class Shape {
      }
 
      moveDown(GRID) {
+          let reachedBottom = false;
+
           // update in reverse order
           for (let i = this.shape.length - 1; i >= 0; i--) {
                for (let j = 0; j < this.shape[i].length; j++) {
@@ -24,16 +26,30 @@ class Shape {
 
                     // return true to remove the shape and cement it's last position in the grid
                     // the shape has reached the bottom of the grid or is at the lowest it can go
-                    if (GRID[x + 1] === undefined || GRID[x + 1][y] === 1) {
+                    // ground check
+                    if (GRID[x + 1] === undefined) return true;
+
+                    // above a block check
+                    // cell is empty
+                    if (this.shape[i][j].empty && GRID[x + 1][y] === FILL.FILLED) {
+                         reachedBottom = true;
+                         continue;
+                    }
+
+                    // cell is filled
+                    if (!this.shape[i][j].empty && GRID[x + 1][y] === FILL.FILLED) {
+                         console.log("reached bottom");
                          return true;
                     }
 
                     // set the previous position's as empty and mark the lower cells as filled
-                    GRID[x][y] = 0;
-                    GRID[x + 1][y] = FILL.FILLED;
+                    GRID[x][y] = FILL.EMPTY;
+                    GRID[x + 1][y] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
                     this.shape[i][j].x = this.shape[i][j].x + 1;
                }
           }
+
+          if (reachedBottom) return true;
      }
 
      moveRight(GRID) {
