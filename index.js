@@ -30,7 +30,7 @@ const UPDATE_EVENT = new Event("update");
 setInterval(() => {
      removeDOMNodes();
      recreateDOMNodes();
-     updateShapes();
+     // updateShapes();
 }, 500);
 
 window.addEventListener("keydown", function (event) {
@@ -50,13 +50,13 @@ window.addEventListener("update", (event) => {
 
 function updateShapes() {
      if (SHAPE?.moveDown?.(GRID)) {
-          addNewShape();
           removeFullRows();
+          addNewShape();
      }
 }
 
 function addNewShape() {
-     SHAPE = new Shape();
+     SHAPE = new Shape_T();
      SHAPE.addToGrid(GRID);
 }
 

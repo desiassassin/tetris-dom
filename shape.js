@@ -1,15 +1,14 @@
 class Shape {
-     constructor() {
-          this.shape = [
-               [new Cell(), new Cell()],
-               [new Cell(), new Cell()]
-          ];
+     constructor(shapeStructure) {
+          this.shape = shapeStructure;
      }
 
      addToGrid(GRID) {
+          console.log(this.shape);
           for (let i = 0; i < this.shape.length; i++) {
                for (let j = 0; j < this.shape[i].length; j++) {
-                    GRID[i][j] = FILL.FILLED;
+                    GRID[i][j] = this.shape[i][j].empty ? FILL.EMPTY : FILL.FILLED;
+
                     this.shape[i][j].x = i;
                     this.shape[i][j].y = j;
                }
@@ -74,9 +73,51 @@ class Shape {
      }
 }
 
+class Shape_O extends Shape {
+     constructor() {
+          super([
+               [new Cell(), new Cell()],
+               [new Cell(), new Cell()]
+          ]);
+     }
+}
+
+class Shape_T extends Shape {
+     constructor() {
+          super([
+               [new Cell(), new Cell(), new Cell()],
+               [new Cell(true), new Cell(), new Cell(true)]
+          ]);
+     }
+}
+class Shape_I extends Shape {
+     constructor() {
+          super([[new Cell(), new Cell(), new Cell(), new Cell()]]);
+     }
+}
+
+class Shape_L extends Shape {
+     constructor() {
+          super([
+               [new Cell(), new Cell(), new Cell()],
+               [new Cell(true), new Cell(true), new Cell()]
+          ]);
+     }
+}
+
+class Shape_Z extends Shape {
+     constructor() {
+          super([
+               [new Cell(), new Cell(), new Cell(true)],
+               [new Cell(true), new Cell(), new Cell()]
+          ]);
+     }
+}
+
 class Cell {
-     constructor(x, y) {
+     constructor(empty, x = 0, y = 0) {
           this.x = x;
           this.y = y;
+          this.empty = empty;
      }
 }
