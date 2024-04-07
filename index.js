@@ -10,7 +10,7 @@ const COLS = 10;
 // set a new event on window
 const UPDATE_EVENT = new Event("update");
 
-(function createGrid(rows, cols) {
+function createGrid(rows, cols) {
      // create grid
      GRID = new Array(rows).fill().map(() => new Array(cols).fill().map(() => new Block()));
 
@@ -18,7 +18,9 @@ const UPDATE_EVENT = new Event("update");
      addNewShape();
      // create the initial dom node to show playing area before the game loop kicks in
      recreateDOMNodes();
-})(ROWS, COLS);
+}
+
+createGrid(ROWS, COLS);
 
 setInterval(() => {
      removeDOMNodes();
@@ -43,7 +45,8 @@ window.addEventListener("update", (event) => {
 
 function updateShapes() {
      if (SHAPE?.moveDown?.(GRID)) {
-          if (checkGameOver()) return window.location.reload();
+          if (checkGameOver()) return restartGame();
+          // if (checkGameOver()) return window.location.reload();
           removeFullRows();
           addNewShape();
      }
@@ -97,4 +100,10 @@ function removeFullRows() {
 
 function checkGameOver() {
      return GRID[0].some((cell) => cell.filled === FILL.FILLED);
+}
+
+function restartGame() {
+     SHAPE = null;
+     createGrid(ROWS, COLS);
+     window.dispatchEvent(UPDATE_EVENT);
 }

@@ -43,9 +43,10 @@ html {
 
 .cell {
      aspect-ratio: 1 / 1;
+     border-radius: 5px;
      width: var(--cell-size);
 }
 
 .cell.filled {
-     border: 3px inset rgba(0, 0, 0, 0.75);
+     border: 2px inset rgba(0, 0, 0, 0.75);
 }
